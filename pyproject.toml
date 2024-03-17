@@ -1,0 +1,38 @@
+[project]
+name = "htmx-tutorial-todo"
+version = "0.1.0"
+description = "Small inroduction to development with htmx"
+authors = [
+    { name = "Evgeniy Dubovskoy", email = "edubovskoy@gmail.com" }
+]
+dependencies = [
+    "tinydb>=4.8.0",
+    "bottle>=0.12.25",
+]
+readme = "README.md"
+requires-python = ">= 3.12"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "pytest>=8.1.1",
+    "mypy>=1.9.0",
+    "webtest>=3.0.0",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/htmx_tutorial_todo"]
+
+[tool.mypy]
+exclude = ["build", "dist", "tests", ".venv"]
+
+[[tool.mypy.overrides]]
+module = "bottle"
+ignore_missing_imports = true

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Todo List</title>
+    <link href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <script>
+        function calculateTaskCount() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name="task"]');
+            const checkedCheckboxes = Array.from(checkboxes).filter(el => el.checked);
+            return `(${checkedCheckboxes.length}/${checkboxes.length})`
+        }
+
+        htmx.on('update-counter', () => {
+            document.getElementById('taskCount').innerHTML = calculateTaskCount()
+        })
+    </script>
+
+    <style>
+        li {
+            list-style-type: none !important;
+        }
+
+        input:checked + label {
+            text-decoration: line-through;
+        }
+
+        @keyframes removed-item-animation {
+                to {
+                    opacity: 0;
+                }
+        }
+
+        .htmx-swapping {
+            animation: removed-item-animation 0.5s forwards;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <br>
+
+    <!-- Insert the counts from the server -->
+    <h1>Todo <span id="taskCount">({{completed}}/{{total}})</span></h1>
+
+    <!-- Triggering the form will send the data to action URL, here /add -->
+    <form hx-on:htmx:after-request="this.reset();this.querySelector('input').focus();"
+          hx-post="/tasks"
+          hx-swap="beforeend"
+          hx-target="ul"
+          hx-trigger="submit"
+    >
+        <input autocomplete="off" name="title" placeholder="New task" type="text" value="">
+        <button class="button-primary" role="button" type="submit" value="Add">Add</button>
+    </form>
+
+    <!-- Here the action set the tasks status. You know see why we set
+    the status on ALL the tasks. To do them individually, we would need a form
+    and a button for each task. -->
+    <ul>
+        % for task in tasks:
+        % include('_task.html', task=task)
+        % end
+    </ul>
+</div>
+</body>
+</html>

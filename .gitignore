@@ -1,0 +1,17 @@
+# python generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# venv
+.venv
+
+# IDE files
+.idea/
+
+# TinyDB databases
+db.json
+test_db.json
